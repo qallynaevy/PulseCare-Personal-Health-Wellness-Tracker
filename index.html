@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PulseCare — Personal Health & Wellness Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070913;
+      --card-bg: rgba(18, 24, 43, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #06b6d4;
+      --primary-glow: rgba(6, 182, 212, 0.3);
+      --secondary: #3b82f6;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --success: #10b981;
+      --danger: #f43f5e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(6, 182, 212, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(59, 130, 246, 0.12) 0%, transparent 40%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      max-width: 960px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 20px;
+      color: #fff;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .brand h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .brand h1 span {
+      color: var(--primary);
+    }
+
+    .status-badge {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 8px 16px;
+      border-radius: 99px;
+      font-size: 13px;
+      color: var(--success);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 960px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 24px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Input & Forms */
+    .input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    input, select {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--card-border);
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: var(--text-main);
+      font-size: 14px;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.1s ease, filter 0.2s;
+      width: 100%;
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Hydration Section */
+    .water-tracker {
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    .water-count {
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 10px 0;
+    }
+
+    /* BMI Result */
+    .bmi-result {
+      margin-top: 14px;
+      padding: 14px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 14px;
+      border: 1px solid var(--card-border);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    /* Medicine List */
+    .med-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 180px;
+      overflow-y: auto;
+      margin-top: 12px;
+    }
+
+    .med-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+    }
+
+    .delete-btn {
+      background: transparent;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    /* Emergency Contact Box */
+    .emergency-box {
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.08), rgba(6, 182, 212, 0.08));
+      border: 1px dashed rgba(244, 63, 94, 0.3);
+      padding: 16px;
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-logo">P</div>
+      <h1>Pulse<span>Care</span></h1>
+    </div>
+    <div class="status-badge">
+      <span style="width: 8px; height: 8px; background: var(--success); border-radius: 50%; display: inline-block;"></span>
+      System Active
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Kolom 1: Hydration & BMI Calculator -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      
+      <!-- Hydration Tracker -->
+      <div class="card">
+        <div class="card-title">💧 Daily Hydration Tracker</div>
+        <div class="water-tracker">
+          <div class="water-count"><span id="waterGlasses">0</span> <span style="font-size: 20px; color: var(--text-sub);">/ 8 Gelas</span></div>
+          <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 16px;">Jaga cairan tubuh biar fokus belajar & beraktivitas!</p>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn" onclick="addWater(1)">+ Tambah 1 Gelas</button>
+            <button class="btn" style="background: rgba(255,255,255,0.08); color: var(--text-main);" onclick="resetWater()">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- BMI Calculator -->
+      <div class="card">
+        <div class="card-title">⚖️ Kalkulator BMI Instan</div>
+        <div class="input-group">
+          <input type="number" id="weight" placeholder="Berat Badan (kg)">
+          <input type="number" id="height" placeholder="Tinggi Badan (cm)">
+        </div>
+        <button class="btn" onclick="calculateBMI()">Hitung BMI</button>
+        <div class="bmi-result" id="bmiResult">
+          Masukkan berat dan tinggi badan untuk melihat status kesehatanmu.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Kolom 2: Medication Reminder & Emergency Info -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      
+      <!-- Medication / Vitamin Reminder -->
+      <div class="card">
+        <div class="card-title">💊 Pengingat Obat & Vitamin</div>
+        <form onsubmit="addMed(event)">
+          <div class="input-group">
+            <input type="text" id="medName" placeholder="Nama Obat / Vitamin..." required autocomplete="off">
+            <input type="text" id="medTime" placeholder="Jam (cth: 08:00)" required autocomplete="off" style="max-width: 120px;">
+          </div>
+          <button type="submit" class="btn">Tambah Jadwal</button>
+        </form>
+        <div class="med-list" id="medList">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <!-- Emergency Quick Guide -->
+      <div class="card">
+        <div class="card-title">🚨 Darurat Kesehatan & Bantuan</div>
+        <div class="emergency-box">
+          <p><strong>Layanan Darurat Medis Indonesia:</strong></p>
+          <ul style="margin-left: 18px; margin-top: 6px; color: var(--text-sub);">
+            <li>Ambulans / Gawat Darurat: <strong style="color: var(--text-main);">118</strong> atau <strong style="color: var(--text-main);">119</strong></li>
+            <li>Darurat Umum (Polisi/Ambulans): <strong style="color: var(--text-main);">112</strong></li>
+          </ul>
+          <p style="margin-top: 10px; font-size: 12px; color: var(--text-sub);">💡 <em>Tips: Jika merasa pusing akibat terlalu lama menatap layar, istirahatkan mata dengan teknik 20-20-20.</em></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // --- HYDRATION SYSTEM ---
+    let water = parseInt(localStorage.getItem('pulsecare_water')) || 0;
+    function updateWaterDisplay() {
+      document.getElementById('waterGlasses').innerText = water;
+      localStorage.setItem('pulsecare_water', water);
+    }
+    function addWater(amount) {
+      water += amount;
+      updateWaterDisplay();
+    }
+    function resetWater() {
+      water = 0;
+      updateWaterDisplay();
+    }
+    updateWaterDisplay();
+
+    // --- BMI CALCULATOR ---
+    function calculateBMI() {
+      const w = parseFloat(document.getElementById('weight').value);
+      const h = parseFloat(document.getElementById('height').value) / 100; // convert to meters
+      const res = document.getElementById('bmiResult');
+
+      if (!w || !h) {
+        res.innerHTML = "<span style='color: var(--danger);'>Mohon isi berat dan tinggi badan dengan benar!</span>";
+        return;
+      }
+
+      const bmi = (w / (h * h)).toFixed(1);
+      let status = "";
+      let color = "var(--primary)";
+
+      if (bmi < 18.5) {
+        status = "Kekurangan berat badan (Underweight)";
+        color = "#38bdf8";
+      } else if (bmi >= 18.5 && bmi <= 24.9) {
+        status = "Normal (Ideal) ✨";
+        color = "var(--success)";
+      } else if (bmi >= 25 && bmi <= 29.9) {
+        status = "Kelebihan berat badan (Overweight)";
+        color = "#facc15";
+      } else {
+        status = "Obesitas";
+        color = "var(--danger)";
+      }
+
+      res.innerHTML = `BMI Kamu: <strong style="font-size: 18px; color: ${color};">${bmi}</strong><br><span style="color: var(--text-sub);">${status}</span>`;
+    }
+
+    // --- MEDICATION SYSTEM ---
+    let meds = JSON.parse(localStorage.getItem('pulsecare_meds')) || [
+      { name: "Vitamin C / Suplemen", time: "09:00" }
+    ];
+
+    function saveAndRenderMeds() {
+      localStorage.setItem('pulsecare_meds', JSON.stringify(meds));
+      renderMeds();
+    }
+
+    function renderMeds() {
+      const list = document.getElementById('medList');
+      list.innerHTML = '';
+
+      meds.forEach((med, index) => {
+        const item = document.createElement('div');
+        item.className = 'med-item';
+        item.innerHTML = `
+          <span>💊 <strong>${med.name}</strong> — <span style="color: var(--primary);">${med.time}</span></span>
+          <button class="delete-btn" onclick="deleteMed(${index})">✕</button>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function addMed(e) {
+      e.preventDefault();
+      const name = document.getElementById('medName').value.trim();
+      const time = document.getElementById('medTime').value.trim();
+
+      if (!name || !time) return;
+
+      meds.push({ name, time });
+      document.getElementById('medName').value = '';
+      document.getElementById('medTime').value = '';
+      saveAndRenderMeds();
+    }
+
+    function deleteMed(index) {
+      meds.splice(index, 1);
+      saveAndRenderMeds();
+    }
+
+    renderMeds();
+  </script>
+</body>
+</html>
